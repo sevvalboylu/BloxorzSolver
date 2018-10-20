@@ -4,6 +4,10 @@ CS404 Homework-1 / Bloxorz game solver with A* algorithm
 """
 import time
 from math import sqrt
+
+from memory_profiler import profile
+
+
 class Node:
     def __init__(self, x1, y1, x2=None, y2=None, parent=None):
         self.orientation = None
@@ -137,11 +141,11 @@ def heuristic(node, goal):
         x = coords[0][0]
         y = coords[0][1]
 
-    dist = sqrt( (x-goal_c[0][0])*(x-goal_c[0][0]) + (y-goal_c[0][1])*(y-goal_c[0][1]))
+    dist = sqrt((x-goal_c[0][0])*(x-goal_c[0][0]) + (y-goal_c[0][1])*(y-goal_c[0][1])) / 2
 
     return dist
 
-
+@profile(precision=4)
 def aStar(graph, start, goal):
     """
     :param graph: The game board, represented by a matrix

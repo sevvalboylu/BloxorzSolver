@@ -3,6 +3,9 @@ Sevval Boylu-20530
 CS404 Homework-1 / Bloxorz game solver with UCS algorithm
 """
 import time
+from memory_profiler import memory_usage, profile
+
+
 class Node:
     def __init__(self, x1, y1, x2=None, y2=None, parent=None):
         self.coordinates = [(x1, y1)]
@@ -119,6 +122,7 @@ def get_neighbors(graph, coords):
             return neighbors
 
 
+@profile(precision=4)
 def ucs(graph, start, goal):
     """
     :param graph: The game board, represented by a matrix
@@ -170,7 +174,8 @@ if __name__ == '__main__':
     i = 0
 
     for line in iter(f.readline, ''):
-        line.replace('\n','')
+        line = line.replace("\n", "")
+        line = line.replace(" ", "")
         w = line.__len__()
         s = list(line[0:w])
         if 'S' in s:
