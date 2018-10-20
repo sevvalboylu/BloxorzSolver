@@ -137,7 +137,7 @@ def heuristic(node, goal):
         x = coords[0][0]
         y = coords[0][1]
 
-    dist = sqrt( (x-goal_c[0][0])*(x-goal_c[0][0]) + (y-goal_c[0][1])*(y-goal_c[0][1]))
+    dist = sqrt( (x-goal_c[0][0])*(x-goal_c[0][0]) + (y-goal_c[0][1])*(y-goal_c[0][1])) / 2
 
     return dist
 
