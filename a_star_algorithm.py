@@ -4,7 +4,6 @@ CS404 Homework-1 / Bloxorz game solver with A* algorithm
 """
 import time
 from math import sqrt
-
 from memory_profiler import profile
 
 
@@ -14,22 +13,14 @@ class Node:
         self.coordinates = [(x1, y1)]
         if parent is not None:
             self.parent = parent
-            self.cost = parent.cost + 1
         else:
             self.cost = 0
 
         if x1 is not None and y2 is not None:
             self.coordinates.append((x2, y2))
-        else:
-            self.orientation = "Standing"
-        if x1 == x2:
-            self.orientation = "Vertical"
-        elif y1 == y2:
-            self.orientation = "Horizontal"
 
-    def setParent(self, parent, cost):
+    def setParent(self, parent):
         self.parent = parent
-        self.cost = cost
 
     def setCost(self, cost):
         self.cost = cost
@@ -61,7 +52,7 @@ def addToQueue(queue, item):
 
 def in_array(item, array):
     for x in array:
-        if x[1] == item:
+        if x[1].coordinates == item.coordinates:
             return x
     return None
 
@@ -154,7 +145,7 @@ def aStar(graph, start, goal):
     :return: the path
     """
     start_time = time.time()  # for running time measuring
-    frontier = [(0,start)]  # priority,node
+    frontier = [(0, start)]  # priority,node
     closed = []
 
     while not frontier.__len__() == 0:
@@ -166,8 +157,9 @@ def aStar(graph, start, goal):
 
         succ = get_neighbors(graph, node.coordinates)
         for item in succ:
+            item.setParent(node)
             cost = node.cost + 1 + heuristic(node, goal)  # g(x) = parent's cost+1
-            item.setParent(node, cost)
+            item.setCost(cost)
 
             f = in_array(item, frontier)
             c = in_array(item, closed)
@@ -182,6 +174,8 @@ def aStar(graph, start, goal):
             elif c is not None and c[0] > cost:
                 closed.remove(c)
                 addToQueue(frontier, item)
+
+        addToQueue(closed, (node.cost, node))
 
     print("--- %s seconds ---" % (time.time() - start_time))
     print("No possible path")
@@ -200,7 +194,8 @@ if __name__ == '__main__':
     i = 0
 
     for line in iter(f.readline, ''):
-        line.replace('\n','')
+        line = line.replace("\n", "")
+        line = line.replace(" ", "")
         w = line.__len__()
         s = list(line[0:w])
         if 'S' in s:

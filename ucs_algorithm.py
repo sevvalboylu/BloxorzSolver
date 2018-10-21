@@ -11,7 +11,6 @@ class Node:
         self.coordinates = [(x1, y1)]
         if parent is not None:
             self.parent = parent
-            self.cost = parent.cost + 1
         else:
             self.cost = 0
 
@@ -20,7 +19,6 @@ class Node:
 
     def setParent(self, parent):
         self.parent = parent
-        self.cost = parent.cost + 1
 
     def setCost(self, cost):
         self.cost = cost
@@ -37,7 +35,7 @@ def addToQueue(queue, item):
         min_ = queue[0]
         max_ = queue[length-1]
         if item[0] < min_[0]:
-            queue.insert(0, item)  # not so sure
+            queue.insert(0, item)
         elif item[0] > max_[0]:
             queue.append(item)
         else:
@@ -52,7 +50,7 @@ def addToQueue(queue, item):
 
 def in_array(item, array):
     for x in array:
-        if x[1] == item:
+        if x[1].coordinates == item.coordinates:
             return x
     return None
 
@@ -136,6 +134,7 @@ def ucs(graph, start, goal):
 
     while not frontier.__len__() == 0:
         weight, node = frontier.pop(0)
+
         if node.coordinates == goal.coordinates:
             print("--- %s seconds ---" % (time.time() - start_time))
             return node
@@ -144,6 +143,7 @@ def ucs(graph, start, goal):
         for item in succ:
             item.setParent(node)
             cost = node.cost + 1
+            item.setCost(cost)
 
             f = in_array(item, frontier)
             c = in_array(item, closed)
